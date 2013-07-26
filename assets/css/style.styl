@@ -1,0 +1,36 @@
+body
+  padding: 50px
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+a
+  color: #00B7FF
+  
+.amount-selector
+  border-radius: 5px
+  overflow: hidden
+  background: #eee
+  .amount-price
+    float: left
+    width: 20%
+    text-align: center
+    cursor: pointer
+    &.selected
+      background: #5bb75b
+      &:hover
+        background: #5bb75b
+    &:hover
+      background: #ddd
+    &.left
+      .amount
+        border-left: 0
+      .price
+        border-left: 0
+    .amount
+      padding: 5px
+      border-bottom: 1px solid #777
+      border-left: 1px solid #777
+    .price
+      padding: 5px
+      border-left: 1px solid #777
+
+  .clearfloat
+    clear: both
