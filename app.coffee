@@ -1,7 +1,5 @@
 # Setup
 express = require("express")
-routes = require("./routes")
-user = require("./routes/user")
 http = require("http")
 path = require("path")
 app = express()
@@ -21,7 +19,6 @@ app.use express.errorHandler()  if "development" is app.get("env")
 # Routes
 app.get "/", (req, res) ->
   res.render "banners"
-
 
 # Start server
 http.createServer(app).listen app.get("port"), ->

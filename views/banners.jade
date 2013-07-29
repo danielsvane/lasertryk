@@ -6,11 +6,11 @@ block content
       form
         fieldset
           label Antal
-          input.input-block-level(type="text")
+          input.input-block-level#amount(type="text")
           label Bredde
-          input.input-block-level(type="text")
+          input.input-block-level#width(type="text")
           label Højde
-          input.input-block-level(type="text")
+          input.input-block-level#height(type="text")
           label Efterbehandling
           select.input-block-level
             option Ingen
@@ -37,4 +37,5 @@ block content
         .amount-price
           div.amount 50 stk
           div.price 1000 kr
-      .clearfloat
+        .clearfloat
+      #price
