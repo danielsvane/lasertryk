@@ -2,6 +2,10 @@
 express = require("express")
 http = require("http")
 path = require("path")
+ftp = require("ftp")
+resumer = require("resumer") # Makes a string streamable, so it can be sent to ftp
+jsontoxml = require("jsontoxml")
+
 app = express()
 app.set "port", process.env.PORT or 3000
 app.set "views", __dirname + "/views"
@@ -16,9 +20,7 @@ app.use require('connect-assets')()
 app.use express.static(path.join(__dirname, "public"))
 app.use express.errorHandler()  if "development" is app.get("env")
 
-# Routes
-app.get "/", (req, res) ->
-  res.render "banners"
+require(__dirname + "/routes/routes")(app)
 
 # Start server
 http.createServer(app).listen app.get("port"), ->

@@ -3,39 +3,39 @@ extends layout
 block content
   .row
     .span4
-      form
-        fieldset
-          label Antal
-          input.input-block-level#amount(type="text")
-          label Bredde
-          input.input-block-level#width(type="text")
-          label Højde
-          input.input-block-level#height(type="text")
-          label Efterbehandling
-          select.input-block-level
-            option Ingen
-            option Kantbånd
-          label Type
-          select.input-block-level
-            option Stof
-            option Presenning
-          .btn.btn-primary.btn-block#calculate Beregn
-    .span8
-      .amount-selector
-        .amount-price.left
-          div.amount 10 stk
-          div.price 200 kr
-        .amount-price
-          div.amount 20 stk
-          div.price 400 kr
-        .amount-price.selected
-          div.amount 30 stk
-          div.price 600 kr
-        .amount-price
-          div.amount 40 stk
-          div.price 800 kr
-        .amount-price
-          div.amount 50 stk
-          div.price 1000 kr
-        .clearfloat
+      form#product-form
+        label Antal
+        input.input-block-level#amount(name="amount", type="text")
+        label Bredde
+        input.input-block-level#width(name="width", type="text")
+        label Højde
+        input.input-block-level#height(name="height", type="text")
+        label Efterbehandling
+        select.input-block-level#treatment(name="treatment")
+        label Type
+        select.input-block-level#printMethod(name="printMethod")
+        .btn.btn-primary.btn-block#calculate Beregn
+    .span8#price-container
       #price
+      .btn.btn-large.btn-success(data-toggle="modal", data-target="#modal")#buy Køb
+
+    .modal.hide#modal
+      .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+          h3 Modal header
+        .modal-body
+          form#address-form
+            fieldset
+              label Navn
+              input.input-block-level#name(name="name", type="text")
+              label Adresse 1
+              input.input-block-level#address1(name="address1", type="text")
+              label Adresse 2
+              input.input-block-level#address2(name="address2", type="text")
+              label Postnummer
+              input.input-block-level#postal(name="postal", type="text")
+              label By
+              input.input-block-level#city(name="city", type="text")
+
+        .modal-footer
+          a.btn.btn-primary#send(href='#') Send ordre
