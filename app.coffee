@@ -18,10 +18,6 @@ app.use require('connect-assets')()
 app.use express.static(path.join(__dirname, "public"))
 app.use express.errorHandler()  if "development" is app.get("env")
 app.use express.cookieParser()
-app.use express.session
-  secret: "whypleasedeargod"
-  store: new mongostore
-    db: "lasertryk"
 
 # Load modules
 app.use require("./lib/banners")
