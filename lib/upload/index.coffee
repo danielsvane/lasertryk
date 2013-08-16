@@ -1,4 +1,8 @@
 express = require "express"
+ftp = require "ftp"
+resumer = require("resumer") # Makes a string streamable, so it can be sent to ftp
+jsontoxml = require("jsontoxml")
+
 app = module.exports = express()
 
 # Upload xml
@@ -19,11 +23,13 @@ app.post "/upload", (req, res) ->
         "LXBENUMMER": 8660455
 
     stream = resumer().queue(xml).end() # Generate stream from xml text
-    client.put stream, "p.xml", (err) ->
+    client.put stream, "OrdreFTP/d.xml", (err) ->
       console.log "Upload complete"
       client.end()
 
   client.connect
-    host: "127.0.0.1"
+    host: "ordreftp.lasertryk.dk"
+    user: "kildahl"
+    password: "kildahl"
 
   res.send("Uploaded")

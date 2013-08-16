@@ -33,7 +33,7 @@ $ ->
     getInfo()
 
   $("#send").on "click", ->
-    $.get "http://localhost:58989/api/getordernumber.aspx", (orderNumber) ->
+    $.get "http://www.lasertryk.dk/api/getordernumber.aspx", (orderNumber) ->
       postData = $("#product-form, #address-form").serialize()+"&orderNumber="+orderNumber
       $.post "/upload", postData
       $("#modal").modal("toggle")

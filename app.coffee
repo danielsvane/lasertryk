@@ -2,9 +2,6 @@
 express = require("express")
 http = require("http")
 path = require("path")
-ftp = require("ftp")
-resumer = require("resumer") # Makes a string streamable, so it can be sent to ftp
-jsontoxml = require("jsontoxml")
 mongostore = require("connect-mongo")(express)
 
 app = express()
