@@ -23,7 +23,7 @@ app.post "/upload", (req, res) ->
         "LXBENUMMER": 8660455
 
     stream = resumer().queue(xml).end() # Generate stream from xml text
-    client.put stream, "OrdreFTP/d.xml", (err) ->
+    client.put stream, "OrdreFTP/#{req.body.orderNumber}.xml", (err) ->
       console.log "Upload complete"
       client.end()
 
