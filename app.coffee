@@ -21,7 +21,7 @@ app.use express.errorHandler() if "development" is app.get("env")
 app.use express.cookieParser()
 app.use express.session
   secret: "whypleasedeargod"
-  host: "mongodb://heroku_app17067005:dbb07ab3c9410c960ef0960d9dc96ca7@ds037468.mongolab.com:37468/heroku_app17067005"
+  url: "mongodb://heroku_app17067005:dbb07ab3c9410c960ef0960d9dc96ca7@ds037468.mongolab.com:37468/heroku_app17067005"
   store: new mongostore
     db: "lasertryk"
 
