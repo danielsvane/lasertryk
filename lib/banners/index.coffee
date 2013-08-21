@@ -89,7 +89,7 @@ app.post "/savedeliveryinfo", (req, res) ->
           console.log "Temporary file removed"
 
   client.connect
-    host: "localhost"
+    host: "ordreftp.lasertryk.dk"
     # host: "DMZSVC10"
-    # user: "kildahl"
-    # password: "kildahl"
+    user: "kildahl"
+    password: "kildahl"
