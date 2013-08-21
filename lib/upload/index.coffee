@@ -7,11 +7,13 @@ app = module.exports = express()
 
 # Upload xml
 app.post "/upload", (req, res) ->
+  orderNumber = req.body.orderNumber
+
   client = new ftp()
   client.on 'ready', ->
     xml = jsontoxml # Generate xml string from json
       "order":
-        "ORDRENUMMER": req.body.orderNumber
+        "ORDRENUMMER": orderNumber
         "PRIORITET": -1
         "STATUS": 14
         "FORSENDELSE_NAVN": req.body.name

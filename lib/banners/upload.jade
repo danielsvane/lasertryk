@@ -1,0 +1,14 @@
+extends ../views/layout
+
+block append head
+  != js("/assets/js/jquery.ui.widget")
+  != js("/assets/js/jquery.iframe-transport")
+  != js("/assets/js/jquery.fileupload")
+  != js("/lib/banners/upload")
+
+block content
+
+  .row
+    .span12
+      input#fileupload(type="file", name="files[]", data-url="/uploadprint", multiple)
+      a.btn.btn-large.btn-success#order(href="/order/customerinfo") Bestil

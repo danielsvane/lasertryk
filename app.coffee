@@ -14,10 +14,15 @@ app.use express.bodyParser()
 app.use express.methodOverride()
 app.use app.router
 app.use require("stylus").middleware(__dirname + "/public")
-app.use require('connect-assets')()
+app.use require('connect-assets')
+  src: __dirname
 app.use express.static(path.join(__dirname, "public"))
-app.use express.errorHandler()  if "development" is app.get("env")
+app.use express.errorHandler() if "development" is app.get("env")
 app.use express.cookieParser()
+app.use express.session
+  secret: "whypleasedeargod"
+  store: new mongostore
+    db: "lasertryk"
 
 # Load modules
 app.use require("./lib/banners")

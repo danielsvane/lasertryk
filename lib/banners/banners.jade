@@ -1,5 +1,8 @@
 extends ../views/layout
 
+block append head
+  != js("/lib/banners/banners")
+
 block content
 
   .row
@@ -18,26 +21,4 @@ block content
         .btn.btn-primary.btn-block#calculate Beregn
     .span8#price-container
       #price
-      .btn.btn-large.btn-success(data-toggle="modal", data-target="#modal")#buy Køb
-
-
-    .modal.hide#modal
-      .modal-header
-          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-          h3 Modal header
-        .modal-body
-          form#address-form
-            fieldset
-              label Navn
-              input.input-block-level#name(name="name", type="text")
-              label Adresse 1
-              input.input-block-level#address1(name="address1", type="text")
-              label Adresse 2
-              input.input-block-level#address2(name="address2", type="text")
-              label Postnummer
-              input.input-block-level#postal(name="postal", type="text")
-              label By
-              input.input-block-level#city(name="city", type="text")
-
-        .modal-footer
-          a.btn.btn-primary#send(href='#') Send ordre
+      a.btn.btn-large.btn-success#upload Upload trykfil

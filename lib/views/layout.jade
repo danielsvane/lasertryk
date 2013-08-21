@@ -1,16 +1,16 @@
 doctype 5
 html
   head
-    title= title
-    != css("bootstrap.min")
-    != css("style")
-    != js("jquery.min")
-    != js("bootstrap.min")
-    != js("main")
+    block head
+      title= title
+      != css("/assets/css/bootstrap.min")
+      != css("/assets/css/style")
+      != js("/assets/js/jquery.min")
+      != js("/assets/js/bootstrap.min")
   body
     .container
       .navbar
         .navbar-inner
-          a.brand Lasertryk.dk
+          a(href="http://localhost:3000").brand Lasertryk.dk
 
       block content
