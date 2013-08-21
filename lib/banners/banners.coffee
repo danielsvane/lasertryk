@@ -16,7 +16,7 @@ $ ->
       $("#"+id).append $("<option #{if option.selected then "selected"}></option>").attr("value", option.key).text(option.val)
 
   getInfo = ->
-    $.get "http://localhost:58989/api/product_price.aspx",
+    $.get "http://www.lasertryk.dk/api/product_price.aspx",
       width: $("#width").val()
       height: $("#height").val()
       amount: $("#amount").val()

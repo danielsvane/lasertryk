@@ -23,11 +23,14 @@ app.use express.session
   secret: "whypleasedeargod"
   store: new mongostore
     url: "mongodb://daniel:c0ff33m4st3r@ds037468.mongolab.com:37468/heroku_app17067005/sessions"
+  , ->  
+    # Start server when mongo is connected
+    http.createServer(app).listen app.get("port"), ->
+      console.log "Express server listening on port " + app.get("port")
 
 # Load modules
+app.use require("./lib/products")
+app.use require("./lib/products/businesscards")
 app.use require("./lib/banners")
-app.use require("./lib/upload")
-
-# Start server
-http.createServer(app).listen app.get("port"), ->
-  console.log "Express server listening on port " + app.get("port")
+app.use require("./lib/checkout/delivery")
+app.use require("./lib/checkout/payment")

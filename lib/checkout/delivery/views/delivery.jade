@@ -1,0 +1,31 @@
+extends ../../../views/layout
+
+block append head
+  != js("/lib/checkout/delivery/client/client")
+
+block content
+  .row
+    .span12
+      ul.breadcrumb
+        li
+          a(href="/products") Bestilling
+          span.divider /
+        li.active Levering
+
+      form#address-form
+        fieldset
+          label Navn
+          input.input-block-level#name(name="name", type="text")
+          label Adresse 1
+          input.input-block-level#address1(name="address1", type="text")
+          label Adresse 2
+          input.input-block-level#address2(name="address2", type="text")
+          label Postnummer
+          input.input-block-level#postal(name="postal", type="text")
+          label By
+          input.input-block-level#city(name="city", type="text")
+          label Email
+          input.input-block-level#email(name="email", type="text")
+          label Mobilnummer
+          input.input-block-level#phone(name="phone", type="text")
+          .btn.btn-large.btn-success.pull-right#complete Gå til betaling

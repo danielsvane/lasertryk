@@ -1,0 +1,15 @@
+extends ../../../views/layout
+
+block append head
+  != js("/lib/checkout/payment/client/client")
+
+block content
+  .row
+    .span12
+      ul.breadcrumb
+        li
+          a(href="/products") Bestilling
+          span.divider /
+        li.active Betaling
+  
+    .btn.btn-large.btn-success.pull-right#complete Betal

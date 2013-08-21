@@ -1,0 +1,37 @@
+extends ../../../views/layout
+
+block append head
+  != js("/assets/js/jquery.ui.widget")
+  != js("/assets/js/jquery.iframe-transport")
+  != js("/assets/js/jquery.fileupload")
+  != js("/lib/products/businesscards/client/client")
+
+block content
+
+  .row
+    .span12
+      ul.breadcrumb
+        li
+          a(href="/products") Produkter
+          span.divider /
+        li.active Visitkort
+    .span4
+      form#product-form
+        label Antal
+        select.input-block-level#amount(name="amount")
+          option 250
+          option 500
+        .btn.btn-primary.btn-block#calculate Beregn
+    .span8#price-container
+      #price
+      a.btn.btn-large.btn-success#upload Bestil
+
+  // Image upload modal
+  .modal.hide(tabindex="-1")#modal
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+      h3 Upload grafik
+    .modal-body
+      span.btn.btn-success.fileinput-button.btn-block.btn-large
+        span Vælg fil
+        input#fileupload(type="file", name="files[]", data-url="/uploadprint", multiple)

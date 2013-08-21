@@ -43,64 +43,53 @@ app.post "/uploadprint", (req, res) ->
 app.post "/savedeliveryinfo", (req, res) ->
   req.session.deliveryinfo = req.body
 
-  # Get order number from lasertryk
-  http.get "http://www.lasertryk.dk/api/getordernumber.aspx" , (response) ->
+  file = req.session.file
+  deliveryinfo = req.session.deliveryinfo
+  productinfo = req.session.productinfo
 
-    console.log "hej"
-    response.setEncoding "utf8"
-    response.on "data", (orderNumber) ->
+  # Generate xml from session data
+  xml = jsontoxml
+    "Order":
+      "Priority": -1
+      "Status": 14
+      "DeliveryName": deliveryinfo.name
+      "DeliveryAddress1": deliveryinfo.address1
+      "DeliveryAddress2": deliveryinfo.address2
+      "DeliveryPostalCity": deliveryinfo.postal + " " + deliveryinfo.city
+      "DescriptionExtern": "Product info"
+      "Owner": 11
+      "SiteId": 1
+      "DataSet": "DAT"
+      "ReferenceNumber": 8660455
+      "FileName": file.name
+      "DeliveryPhone": deliveryinfo.phone
+      "DeliveryEmail": deliveryinfo.email
+      "BillAccount1": 11504
+      "BillAmount1": productinfo.amount
+      "BillText1": "Printmetode "+productinfo.printMethod
+      "BillPrice1": productinfo.price
 
-      console.log "hejhej"
-      file = req.session.file
-      deliveryinfo = req.session.deliveryinfo
-      productinfo = req.session.productinfo
+  client = new ftp()
 
-      # Generate xml from session data
-      xml = jsontoxml
-        "Order":
-          "OrderNumber": orderNumber
-          "Priority": -1
-          "Status": 14
-          "DeliveryName": deliveryinfo.name
-          "DeliveryAddress1": deliveryinfo.address1
-          "DeliveryAddress2": deliveryinfo.address2
-          "DeliveryPostalCity": deliveryinfo.postal + " " + deliveryinfo.city
-          "DescriptionExtern": "Product info"
-          "Owner": 11
-          "SiteId": 1
-          "DataSet": "DAT"
-          "ReferenceNumber": 8660455
-          "FileName": file.name
-          "DeliveryPhone": deliveryinfo.phone
-          "DeliveryEmail": deliveryinfo.email
-          "BillAccount1": 11504
-          "BillAmount1": productinfo.amount
-          "BillText1": "Printmetode "+productinfo.printMethod
-          "BillPrice1": productinfo.price
+  client.on "ready", ->
+    # Step into upload folder
+    client.cwd "OrdreFTP", (err) ->
+      # Upload print file to ftp
+      client.put file.path, file.name, (err) ->
+        console.log err
+        # Upload xml file to ftp
+        stream = resumer().queue(xml).end() # Generate stream from xml text
+        filename = Date.now()+".xml"
+        client.put stream, filename, (err) ->
+          res.send "ok"
+          client.end()
+        # Remove the uploaded file from temp storage
+        fs.unlink file.path, (err) ->
+          console.log err
+          console.log "Temporary file removed"
 
-
-      client = new ftp()
-
-      client.on "ready", ->
-        console.log "hejhejhek"
-        # Step into upload folder
-        client.cwd "OrdreFTP", (err) ->
-          # Upload print file to ftp
-          client.put file.path, file.name, (err) ->
-            console.log err
-            # Upload xml file to ftp
-            stream = resumer().queue(xml).end() # Generate stream from xml text
-            client.put stream, orderNumber+".xml", (err) ->
-              res.send orderNumber
-              client.end()
-            # Remove the uploaded file from temp storage
-            fs.unlink file.path, (err) ->
-              console.log err
-              console.log "Temporary file removed"
-
-      client.connect
-        host: "ordreftp.lasertryk.dk"
-        user: "kildahl"
-        password: "kildahl"
-
-
+  client.connect
+    host: "localhost"
+    # host: "DMZSVC10"
+    # user: "kildahl"
+    # password: "kildahl"

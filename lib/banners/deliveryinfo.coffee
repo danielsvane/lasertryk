@@ -1,5 +1,5 @@
 $ ->
   $("#complete").on "click", ->
     data = $("#address-form").serialize()
-    $.post "/savedeliveryinfo", data, (orderNumber) ->
-      $("#address-container").prepend("<div class='alert alert-success'>Ordre oprettet med ordrenummer <strong>#{orderNumber}</strong></div>")
+    $.post "/savedeliveryinfo", data, (success) ->
+      $("#address-container").prepend("<div class='alert alert-success'>Et ordrenummer er blevet sendt til din email</div>")
