@@ -19,8 +19,8 @@ app.get "/products/banners", (req, res) ->
 app.get "/products/:product/upload", (req, res) ->
   res.render "upload"
 
-app.get "/order/customerinfo", (req, res) ->
-  res.render "customerinfo"
+app.get "/order/deliveryinfo", (req, res) ->
+  res.render "deliveryinfo"
 
 app.post "/saveproductinfo", (req, res) ->
   req.session.productinfo = req.body
@@ -40,53 +40,66 @@ app.post "/uploadprint", (req, res) ->
       }
     ]
 
-app.post "/savecustomerinfo", (req, res) ->
-  req.session.customerinfo = req.body
+app.post "/savedeliveryinfo", (req, res) ->
+  req.session.deliveryinfo = req.body
 
   # Get order number from lasertryk
-  http.get "http://www.lasertryk.dk/api/getordernumber.aspx" , (resonse) ->
-    resonse.setEncoding "utf8"
-    resonse.on "data", (orderNumber) ->
+  http.get "http://www.lasertryk.dk/api/getordernumber.aspx" , (response) ->
+
+    console.log "hej"
+    response.setEncoding "utf8"
+    response.on "data", (orderNumber) ->
+
+      console.log "hejhej"
+      file = req.session.file
+      deliveryinfo = req.session.deliveryinfo
+      productinfo = req.session.productinfo
 
       # Generate xml from session data
       xml = jsontoxml
-        "order":
-          "ORDRENUMMER": orderNumber
-          "PRIORITET": -1
-          "STATUS": 14
-          "FORSENDELSE_NAVN": req.session.customerinfo.name
-          "FORSENDELSE_ADRESSE1": req.session.customerinfo.address1
-          "FORSENDELSE_ADRESSE2": req.session.customerinfo.address2
-          "FORSENDELSE_POSTBY": req.session.customerinfo.postal + " " + req.session.customerinfo.city
-          "BESKRIVELSE_EKSTERN": "Product info"
-          "EJER": 11
-          "LXBENUMMER": 8660455
-          "SiteID": 1
-          "DATASET": "DAT"
-          
+        "Order":
+          "OrderNumber": orderNumber
+          "Priority": -1
+          "Status": 14
+          "DeliveryName": deliveryinfo.name
+          "DeliveryAddress1": deliveryinfo.address1
+          "DeliveryAddress2": deliveryinfo.address2
+          "DeliveryPostalCity": deliveryinfo.postal + " " + deliveryinfo.city
+          "DescriptionExtern": "Product info"
+          "Owner": 11
+          "SiteId": 1
+          "DataSet": "DAT"
+          "ReferenceNumber": 8660455
+          "FileName": file.name
+          "DeliveryPhone": deliveryinfo.phone
+          "DeliveryEmail": deliveryinfo.email
+          "BillAccount1": 11504
+          "BillAmount1": productinfo.amount
+          "BillText1": "Printmetode "+productinfo.printMethod
+          "BillPrice1": productinfo.price
+
+
       client = new ftp()
 
       client.on "ready", ->
+        console.log "hejhejhek"
         # Step into upload folder
-        client.cwd "OrdreFTP/test", (err) ->
-          # Create print folder
-          client.mkdir orderNumber, (err) ->
+        client.cwd "OrdreFTP", (err) ->
+          # Upload print file to ftp
+          client.put file.path, file.name, (err) ->
             console.log err
-            # Upload print file to ftp
-            client.put req.session.file.path, orderNumber+"/"+req.session.file.name, (err) ->
+            # Upload xml file to ftp
+            stream = resumer().queue(xml).end() # Generate stream from xml text
+            client.put stream, orderNumber+".xml", (err) ->
+              res.send orderNumber
+              client.end()
+            # Remove the uploaded file from temp storage
+            fs.unlink file.path, (err) ->
               console.log err
-              # Upload xml file to ftp
-              stream = resumer().queue(xml).end() # Generate stream from xml text
-              client.put stream, orderNumber+".xml", (err) ->
-                res.send orderNumber
-                client.end()
-              # Remove the uploaded file from temp storage
-              fs.unlink req.session.file.path, (err) ->
-                console.log err
-                console.log "Temporary file removed"
+              console.log "Temporary file removed"
 
       client.connect
-        host: "DMZSVC10"
+        host: "ordreftp.lasertryk.dk"
         user: "kildahl"
         password: "kildahl"
 

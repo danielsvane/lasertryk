@@ -33,6 +33,6 @@ $ ->
     getInfo()
 
   $("#upload").on "click", ->
-    data = $("#product-form").serialize()
+    data = $("#product-form").serialize() + "&price=" + $("#price").text()
     $.post "/saveproductinfo", data, (res) ->
       window.location = "/products/banners/upload"

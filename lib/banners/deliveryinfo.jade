@@ -1,11 +1,11 @@
 extends ../views/layout
 
 block append head
-  != js("/lib/banners/customerinfo")
+  != js("/lib/banners/deliveryinfo")
 
 block content
   .row
-    .span6.offset3
+    .span6.offset3#address-container
       form#address-form
         fieldset
           label Navn
@@ -18,4 +18,8 @@ block content
           input.input-block-level#postal(name="postal", type="text")
           label By
           input.input-block-level#city(name="city", type="text")
+          label Email
+          input.input-block-level#email(name="email", type="text")
+          label Mobilnummer
+          input.input-block-level#phone(name="phone", type="text")
           .btn.btn-large.btn-success.pull-right#complete Udfør ordre
