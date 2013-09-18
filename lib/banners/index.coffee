@@ -9,7 +9,7 @@ resumer = require("resumer") # Makes a string streamable, so it can be sent to f
 app.set("views", __dirname)
 
 app.get "/", (req, res) ->
-  res.redirect "/products/banners/"
+  res.redirect "/products/"
 
 # Render product banners
 app.get "/products/banners", (req, res) ->
@@ -39,6 +39,61 @@ app.post "/uploadprint", (req, res) ->
         "name": file.name
       }
     ]
+
+app.get "/sendorder", (req, res) ->
+
+  file = req.session.file
+  deliveryinfo = req.session.deliveryinfo
+  productinfo = req.session.productinfo
+
+  # Generate xml from session data
+  xml = jsontoxml
+    "Order":
+      "Priority": -1
+      "Status": 14
+      "DeliveryName": deliveryinfo.name
+      "DeliveryAddress1": deliveryinfo.address1
+      "DeliveryAddress2": deliveryinfo.address2
+      "DeliveryPostalCity": deliveryinfo.postal + " " + deliveryinfo.city
+      "DescriptionExtern": "Product info"
+      "Owner": 11
+      "SiteId": 1
+      "DataSet": "DAT"
+      "ReferenceNumber": 8660455
+      "FileName": file.name
+      "DeliveryPhone": deliveryinfo.phone
+      "DeliveryEmail": deliveryinfo.email
+      "BillAccount1": 11504
+      "BillAmount1": productinfo.amount
+      "BillPrice1": productinfo.price
+
+  # Setup new ftp
+  client = new ftp()
+
+  console.log "going into sendorder"
+
+  # Upload xml and print to ftp
+  client.on "ready", ->
+    # Step into upload folder
+    console.log "Startet uploadig to ftp"
+    client.cwd "OrdreFTP", (err) ->
+      # Upload print file to ftp
+      client.put file.path, file.name, (err) ->
+        # Remove the uploaded file from temp storage
+        fs.unlink file.path, (err) ->
+          console.log "Temporary file removed"
+        # Upload xml file to ftp
+        stream = resumer().queue(xml).end() # Generate stream from xml text
+        filename = Date.now()+".xml"
+        client.put stream, filename, (err) ->
+          client.end()
+          res.redirect "/checkout/receipt"
+
+  # Connect to ftp client
+  client.connect
+    host: app.set "ftp host"
+    user: "kildahl"
+    password: "kildahl"
 
 app.post "/savedeliveryinfo", (req, res) ->
   req.session.deliveryinfo = req.body
@@ -89,7 +144,7 @@ app.post "/savedeliveryinfo", (req, res) ->
           console.log "Temporary file removed"
 
   client.connect
-    host: "ordreftp.lasertryk.dk"
+    host: app.set "ftphost"
     # host: "DMZSVC10"
     user: "kildahl"
     password: "kildahl"

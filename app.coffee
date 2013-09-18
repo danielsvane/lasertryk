@@ -14,7 +14,7 @@ app.use express.bodyParser()
 app.use express.methodOverride()
 app.use app.router
 app.use require("stylus").middleware(__dirname + "/public")
-app.use require('connect-assets')
+app.use require("connect-assets")
   src: __dirname
 app.use express.static(path.join(__dirname, "public"))
 app.use express.errorHandler() if "development" is app.get("env")
@@ -28,9 +28,21 @@ app.use express.session
     http.createServer(app).listen app.get("port"), ->
       console.log "Express server listening on port " + app.get("port")
 
+app.configure "development", ->
+  app.set "ftp host", "DMZSVC10"
+
+app.configure "production", ->
+  app.set "ftp host", "ordreftp.lasertryk.dk"
+
+# Default local variables
+app.use (req, res, next) ->
+  res.locals.site = "http://"+req.get('Host')
+  next()
+
 # Load modules
 app.use require("./lib/products")
 app.use require("./lib/products/businesscards")
 app.use require("./lib/banners")
 app.use require("./lib/checkout/delivery")
 app.use require("./lib/checkout/payment")
+app.use require("./lib/checkout/receipt")

@@ -3,4 +3,5 @@ app = module.exports = express()
 app.set("views", __dirname + "/views")
 
 app.get "/checkout/payment", (req, res) ->
-  res.render "payment"
+  res.render "payment",
+    price: req.session.productinfo.price

@@ -12,4 +12,18 @@ block content
           span.divider /
         li.active Betaling
   
-    .btn.btn-large.btn-success.pull-right#complete Betal
+    script(charset='UTF-8', src='https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js', type='text/javascript')
+    #payment-div
+    script(type='text/javascript')
+      paymentwindow = new PaymentWindow({
+        'merchantnumber': "8880248",
+        'amount': !{JSON.stringify(price*100)},
+        'currency': "DKK",
+        'windowstate': "4",
+        'paymentcollection': "1",
+        'iframeheight': "400",
+        'iframewidth': "760",
+        'accepturl': !{JSON.stringify(site + "/sendorder")}
+      });
+      paymentwindow.append('payment-div');
+      paymentwindow.open();

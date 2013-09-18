@@ -7,5 +7,6 @@ app.get "/checkout/delivery", (req, res) ->
   res.render "delivery"
 
 app.post "/checkout/delivery/save", (req, res) ->
-  req.session.delivery = req.body
+  req.session.deliveryinfo = req.body
+  console.log req.session.deliveryinfo.email
   res.send "Saved delivery info"

@@ -9,5 +9,11 @@ app.get "/products/businesscards", (req, res) ->
 app.post "/products/businesscards/getprice", (req, res) ->
   amount = req.body.amount
   price = amount/250
-  console.log price
+
+  # Save info to session
+  req.session.productinfo =
+    price: price
+    amount: amount
+    id: 20
+
   res.send "#{price}"
