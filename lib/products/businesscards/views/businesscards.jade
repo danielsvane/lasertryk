@@ -17,10 +17,23 @@ block content
         li.active Visitkort
     .span4
       form#product-form
+        label Medie
+        select.input-block-level#media(name="media")
+          option(value=0) Farvetryk på én side
+          option(value=1) Farvetryk på begge sider
+          option(value=2) 4-sidet
         label Antal
         select.input-block-level#amount(name="amount")
           option 250
           option 500
+        label Personer
+        select.input-block-level#numPeople(name="numPeople")
+          option 1
+          option 2
+          option 3
+          option 4
+          option 5
+          option 10
         .btn.btn-primary.btn-block#calculate Beregn
     .span8#price-container
       #price
